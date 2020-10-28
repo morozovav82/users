@@ -4,7 +4,7 @@ metadata:
   name: users-config
 data:
   BASE_APP_URL: '/otusapp/morozovav/'
-  DATABASE_URL: 'jdbc:postgresql://192.168.212.37:5432/postgres?currentShema=users'
+  DATABASE_URL: 'jdbc:postgresql://192.168.212.35:5432/postgres?currentShema=users'
 ---
 apiVersion: v1
 kind: Secret

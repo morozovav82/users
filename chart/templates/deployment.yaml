@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "users-chart.fullname" . }}
+  labels:
+    {{- include "users-chart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "users-chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "users-chart.selectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image }}"
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+#            - name: logging_level_root
+#              value: debug
+            - name: app_basePath
+              valueFrom:
+                configMapKeyRef:
+                  name: users-config
+                  key: BASE_APP_URL
+            - name: DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: users-config
+                  key: DATABASE_URL
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: users-secret
+                  key: DATABASE_USER
+            - name: DB_PSW
+              valueFrom:
+                secretKeyRef:
+                  name: users-secret
+                  key: DATABASE_PSW

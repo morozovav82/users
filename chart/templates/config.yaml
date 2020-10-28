@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: users-config
+data:
+  BASE_APP_URL: {{ .Values.appBasePath }}
+  DATABASE_URL: {{ printf "jdbc:postgresql://%s:%s/%s" (include "postgresql.fullname" .) .Values.postgresql.service.port .Values.postgresql.postgresqlDatabase  | quote }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: users-secret
+type: Opaque
+data:
+  DATABASE_USER: {{ printf "%s" .Values.postgresql.postgresqlUsername  | b64enc | quote }}
+  DATABASE_PSW: {{ printf "%s" .Values.postgresql.postgresqlPassword  | b64enc | quote }}

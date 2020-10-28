@@ -1,0 +1,23 @@
+replicaCount: 2
+
+image: morozovav82/users:1.0
+
+service:
+  type: NodePort
+  port: 9000
+
+appBasePath: '/otusapp/morozovav/'
+  
+postgresql:
+  enabled: true
+  postgresqlDatabase: users
+  postgresqlUsername: users
+  postgresqlPassword: qwerty123
+  service:
+    port: "5432"
+
+ingress:
+  enabled: true
+  hosts:
+    - host: arch.homework
+      paths: ["/otusapp/morozovav($|/)(.*)"]
