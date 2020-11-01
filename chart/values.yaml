@@ -20,4 +20,4 @@ ingress:
   enabled: true
   hosts:
     - host: arch.homework
-      paths: ["/otusapp/morozovav($|/)(.*)"]
+      paths: ["/otusapp/morozovav"]

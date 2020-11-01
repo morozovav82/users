@@ -6,3 +6,13 @@ spring:
       password: ${DB_PSW}
 
 app.basePath:
+
+#настройка actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
