@@ -14,7 +14,7 @@ spec:
        spec:
           containers:
           - name: users
-            image: morozovav82/users:1.0
+            image: morozovav82/users:1.1
             ports:
               - name: web 
                 containerPort: 8080
