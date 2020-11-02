@@ -1,9 +1,11 @@
-package ru.morozov.users;
+package ru.morozov.users.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import ru.morozov.users.UserMapper;
 import ru.morozov.users.dto.NewUserDto;
 import ru.morozov.users.dto.UserDto;
 import ru.morozov.users.entity.User;
@@ -20,6 +22,15 @@ public class UsersController {
 
     @PostMapping("")
     public UserDto createUser(@RequestBody NewUserDto user) {
+        if (StringUtils.isEmpty(user.getUsername())) {
+            throw new RuntimeException("Empty username");
+        }
+
+        boolean exists = userRepository.existsByUsername(user.getUsername());
+        if (exists) {
+            throw new RuntimeException("User exists");
+        }
+
         return UserMapper.convertUserToUserDto(
                 userRepository.save(
                         UserMapper.convertNewUserDtoDtoToUser(user)
