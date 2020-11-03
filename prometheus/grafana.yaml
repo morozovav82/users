@@ -876,7 +876,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "histogram_quantile(0.5, \r\n      sum by (le, path) \r\n         (rate(nginx_ingress_controller_request_duration_seconds_bucket[1m]))\r\n) * 1000",
+              "expr": "histogram_quantile(0.95, \r\n      sum by (le, path) \r\n         (rate(nginx_ingress_controller_request_duration_seconds_bucket[1m]))\r\n) * 1000",
               "interval": "",
               "legendFormat": "{{path}}",
               "refId": "A"
@@ -1109,7 +1109,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "histogram_quantile(0.5, \r\n      sum by (le, path) \r\n         (rate(nginx_ingress_controller_request_duration_seconds_bucket[1m]))\r\n) * 1000",
+              "expr": "histogram_quantile(1.0, \r\n      sum by (le, path) \r\n         (rate(nginx_ingress_controller_request_duration_seconds_bucket[1m]))\r\n) * 1000",
               "interval": "",
               "legendFormat": "{{path}}",
               "refId": "A"
@@ -1204,7 +1204,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "histogram_quantile(0.5, \r\n      sum by (le, path) \r\n         (rate(nginx_ingress_controller_request_duration_seconds_bucket[1m]))\r\n) * 1000",
+              "expr": "histogram_quantile(0.99, \r\n      sum by (le, path) \r\n         (rate(nginx_ingress_controller_request_duration_seconds_bucket[1m]))\r\n) * 1000",
               "interval": "",
               "legendFormat": "{{path}}",
               "refId": "A"
@@ -1260,12 +1260,12 @@ data:
         "list": []
       },
       "time": {
-        "from": "2020-11-03T08:17:55.000Z",
+        "from": "now-1h",
         "to": "now"
       },
       "timepicker": {},
       "timezone": "",
       "title": "morozovav_hw3",
       "uid": "Gcj6VvhMz",
-      "version": 1
+      "version": 3
     }
