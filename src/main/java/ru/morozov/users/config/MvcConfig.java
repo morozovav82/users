@@ -9,7 +9,8 @@ import ru.morozov.users.controller.UsersControllerHandler;
 /**
  * Конфигурация MVC
  */
-@Configuration
+@Deprecated
+//@Configuration
 public class MvcConfig extends WebMvcConfigurerAdapter {
 
     /**

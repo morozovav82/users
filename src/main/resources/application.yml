@@ -16,3 +16,11 @@ management:
   endpoint:
     health:
       show-details: always
+
+---
+#настройка для prometheus
+management:
+  metrics:
+    distribution:
+      percentiles[http.server.requests]: 0.5, 0.95, 0.99, 1
+      percentiles-histogram[http.server.requests]: true

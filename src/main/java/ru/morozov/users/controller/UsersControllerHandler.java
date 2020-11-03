@@ -16,7 +16,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * Обработчик, вызываемый перед выполнением основного контроллера
  */
-@Component
+@Deprecated
+//@Component
 public class UsersControllerHandler extends HandlerInterceptorAdapter {
 
     private ThreadLocal<Long> startTimer = new ThreadLocal<>();
