@@ -3,40 +3,20 @@ package ru.morozov.users.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import ru.morozov.users.UserMapper;
 import ru.morozov.users.dto.NewUserDto;
-import ru.morozov.users.dto.UserDto;
 import ru.morozov.users.entity.User;
 import ru.morozov.users.repo.UserRepository;
 
 import java.util.Optional;
 
-@RestController()
+@RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
 public class UsersController {
 
     private final UserRepository userRepository;
-
-    @PostMapping("")
-    public UserDto createUser(@RequestBody NewUserDto user) {
-        if (StringUtils.isEmpty(user.getUsername())) {
-            throw new RuntimeException("Empty username");
-        }
-
-        boolean exists = userRepository.existsByUsername(user.getUsername());
-        if (exists) {
-            throw new RuntimeException("User exists");
-        }
-
-        return UserMapper.convertUserToUserDto(
-                userRepository.save(
-                        UserMapper.convertNewUserDtoDtoToUser(user)
-                )
-        );
-    }
 
     @GetMapping("/{userId}")
     public ResponseEntity getUser(@PathVariable("userId") Long userId) {
@@ -58,7 +38,7 @@ public class UsersController {
 
     @PutMapping("/{userId}")
     public void updateUser(@PathVariable("userId") Long userId, @RequestBody NewUserDto user) {
-        User userEntry = UserMapper.convertNewUserDtoDtoToUser(user);
+        User userEntry = UserMapper.convertNewUserDtoToUser(user);
         userEntry.setId(userId);
         userRepository.save(userEntry);
     }

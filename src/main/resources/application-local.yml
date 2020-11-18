@@ -6,3 +6,7 @@ spring:
       password: qwerty123
 
 app.basePath: /
+
+#logging:
+#  level:
+#    root: debug
