@@ -7,7 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
-import ru.morozov.users.UserMapper;
+import ru.morozov.users.utils.UserMapper;
 import ru.morozov.users.dto.UserDto;
 import ru.morozov.users.entity.User;
 import ru.morozov.users.repo.UserRepository;

@@ -1,4 +1,4 @@
-package ru.morozov.users;
+package ru.morozov.users.utils;
 
 import ru.morozov.users.dto.NewUserDto;
 import ru.morozov.users.dto.UserDto;

@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.morozov.users.UserMapper;
+import ru.morozov.users.utils.AuthUtils;
+import ru.morozov.users.utils.UserMapper;
 import ru.morozov.users.dto.NewUserDto;
 import ru.morozov.users.entity.User;
 import ru.morozov.users.repo.UserRepository;
@@ -20,6 +21,10 @@ public class UsersController {
 
     @GetMapping("/{userId}")
     public ResponseEntity getUser(@PathVariable("userId") Long userId) {
+        if (!AuthUtils.getCurrentUserId().equals(userId)) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
+
         Optional<User> res = userRepository.findById(userId);
         if (res.isPresent()) {
             return new ResponseEntity(
@@ -32,14 +37,24 @@ public class UsersController {
     }
 
     @DeleteMapping("/{userId}")
-    public void deleteUser(@PathVariable("userId") Long userId) {
+    public ResponseEntity deleteUser(@PathVariable("userId") Long userId) {
+        if (!AuthUtils.getCurrentUserId().equals(userId)) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
+
         userRepository.deleteById(userId);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @PutMapping("/{userId}")
-    public void updateUser(@PathVariable("userId") Long userId, @RequestBody NewUserDto user) {
+    public ResponseEntity updateUser(@PathVariable("userId") Long userId, @RequestBody NewUserDto user) {
+        if (!AuthUtils.getCurrentUserId().equals(userId)) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
+
         User userEntry = UserMapper.convertNewUserDtoToUser(user);
         userEntry.setId(userId);
         userRepository.save(userEntry);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
