@@ -1,9 +1,11 @@
 spring:
-    datasource:
-      driver-class-name: 'org.postgresql.Driver'
-      url: ${DB_URL}
-      username: ${DB_USER}
-      password: ${DB_PSW}
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration # отключение стандартного переброса на страницу /error в случае ошибок
+  datasource:
+    driver-class-name: 'org.postgresql.Driver'
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PSW}
 
 app.basePath:
 

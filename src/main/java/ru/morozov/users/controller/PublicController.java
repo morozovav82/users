@@ -39,7 +39,7 @@ public class PublicController {
     }
 
     @PostMapping("/find")
-    public ResponseEntity getUser(@PathVariable("userName") String userName, @PathVariable("userPassword") String userPassword) {
+    public ResponseEntity getUser(@RequestParam("userName") String userName, @RequestParam("userPassword") String userPassword) {
         Optional<User> res = userRepository.findOneByUsernameAndPassword(userName, userPassword);
         if (res.isPresent()) {
             return new ResponseEntity(
