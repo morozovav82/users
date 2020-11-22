@@ -7,6 +7,8 @@ service:
   port: 9000
 
 appBasePath: '/users/'
+authSigninUrl: 'http://$host/auth/signin'
+authAuthUrl: 'http://auth-auth-chart.morozovav.svc.cluster.local:9010/auth'
   
 postgresql:
   enabled: true
