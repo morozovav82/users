@@ -18,7 +18,7 @@ public class UserMapper {
         return userDto;
     }
 
-    public static User convertNewUserDtoDtoToUser(NewUserDto newUserDto) {
+    public static User convertNewUserDtoToUser(NewUserDto newUserDto) {
         User user = new User();
         user.setUsername(newUserDto.getUsername());
         user.setFirstname(newUserDto.getFirstname());
@@ -30,7 +30,7 @@ public class UserMapper {
     }
 
     public static User convertUserDtoToUser(UserDto userDto) {
-        User user = convertNewUserDtoDtoToUser(userDto);
+        User user = convertNewUserDtoToUser(userDto);
         user.setId(userDto.getId());
 
         return user;

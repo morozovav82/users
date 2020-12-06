@@ -1,3 +1,6 @@
+server:
+  port: 8081
+
 spring:
     datasource:
       driver-class-name: 'org.postgresql.Driver'
@@ -6,3 +9,4 @@ spring:
       password: qwerty123
 
 app.basePath: /
+bill.url: http://localhost:8082

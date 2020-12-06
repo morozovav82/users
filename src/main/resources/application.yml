@@ -6,6 +6,7 @@ spring:
       password: ${DB_PSW}
 
 app.basePath:
+bill.url: ${BILL_URL}
 
 #настройка actuator
 management:

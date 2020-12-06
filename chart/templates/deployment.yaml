@@ -31,6 +31,11 @@ spec:
                 configMapKeyRef:
                   name: users-config
                   key: BASE_APP_URL
+            - name: BILL_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: users-config
+                  key: BILL_URL
             - name: DB_URL
               valueFrom:
                 configMapKeyRef:

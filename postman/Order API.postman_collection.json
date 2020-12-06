@@ -1,0 +1,502 @@
+{
+	"info": {
+		"_postman_id": "49018df5-ce34-4247-afcb-78b13ff6fd2e",
+		"name": "Order API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "регистрация пользователя 1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "cc80091d-e622-4e26-8c6e-4f620f977e6d",
+						"exec": [
+							"pm.environment.set(\"userFirstName\", pm.variables.replaceIn(\"{{$randomFirstName}}\"))\r",
+							"pm.environment.set(\"userLastName\", pm.variables.replaceIn(\"{{$randomLastName}}\"))\r",
+							"pm.environment.set(\"userLogin\", pm.environment.get(\"userLastName\") + \"_\" + pm.environment.get(\"userFirstName\"))\r",
+							"pm.environment.set(\"userPhone\", pm.variables.replaceIn(\"{{$randomPhoneNumber}}\"))"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "c9b37f35-ac10-4062-8cd5-6bc6d8b6dc8c",
+						"exec": [
+							"pm.test(\"Status code is 201\", () => {\r",
+							"  pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"var responseJSON = JSON.parse(responseBody)\r",
+							"pm.collectionVariables.set(\"userId\", responseJSON[\"id\"])\r",
+							"pm.collectionVariables.set(\"userEmail\", responseJSON[\"email\"])"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"firstname\": \"{{userFirstName}}\",\r\n  \"lastname\": \"{{userLastName}}\",\r\n  \"username\": \"{{userLogin}}\",\r\n  \"email\": \"{{userLogin}}@example.com\",\r\n  \"phone\": \"{{userPhone}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{baseUrl}}/users/user",
+					"protocol": "http",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "положить деньги на счет",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "1135e2ec-9e4d-4caa-9fca-a72bd9bbf8db",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "1fe11864-c039-4fc6-a74b-dfeeafd20513",
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var responseJSON = JSON.parse(responseBody)\r",
+							"\r",
+							"pm.test(\"Balance is 100$\", () => {\r",
+							"const responseJson = pm.response.json();\r",
+							"pm.expect(100).to.eql(responseJson.balance);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "money",
+							"value": "100",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{baseUrl}}/bill/account/{{userId}}/put",
+					"protocol": "http",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"bill",
+						"account",
+						"{{userId}}",
+						"put"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "заказ, на который хватает денег",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "01a22a9f-18f9-4881-9b7a-252e15570988",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "0e1d8ecf-e347-4d7d-b6ee-550ebba05c85",
+						"exec": [
+							"pm.test(\"Status code is 201\", () => {\r",
+							"  pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"var responseJSON = JSON.parse(responseBody)\r",
+							"pm.collectionVariables.set(\"orderId\", responseJSON[\"id\"])"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"userId\": {{userId}},\r\n  \"productId\": 1,\r\n  \"qnt\": 1,\r\n  \"cost\": 20\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{baseUrl}}/order/order",
+					"protocol": "http",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"order",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "деньги на счету пользователя",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "082c5039-30d6-407c-b510-6f74470ccfcf",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "6f1672e8-7204-44b2-8990-c4a054234263",
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var responseJSON = JSON.parse(responseBody)\r",
+							"\r",
+							"pm.test(\"Balance is 80$\", () => {\r",
+							"const responseJson = pm.response.json();\r",
+							"pm.expect(80).to.eql(responseJson.balance);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{baseUrl}}/bill/account/{{userId}}",
+					"protocol": "http",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"bill",
+						"account",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "отправленные сообщения",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "bb02bc1c-b16c-4fea-ba2c-1debcecd0b81",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "ad5910f5-2c31-4bb4-824b-32a021252bd7",
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var responseJSON = JSON.parse(responseBody)\r",
+							"\r",
+							"pm.test(\"Email sent\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    var mail = responseJson.find(function findByOrderId(element, index, array) {\r",
+							"    return element.body.indexOf(pm.collectionVariables.get(\"orderId\")) > -1;\r",
+							"    });\r",
+							"    \r",
+							"    pm.expect(pm.collectionVariables.get(\"userEmail\")).to.eql(mail.email);\r",
+							"    pm.expect(\"Заказ успешно оплачен\").to.eql(mail.title);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{baseUrl}}/mail/list",
+					"protocol": "http",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"mail",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "заказ, на который не хватает денег",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "397c831e-f079-4824-a537-3e1d68bff0de",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "102b7034-9543-458e-b6c0-feb5ffbbe088",
+						"exec": [
+							"pm.test(\"Status code is 201\", () => {\r",
+							"  pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"var responseJSON = JSON.parse(responseBody)\r",
+							"pm.collectionVariables.set(\"orderId\", responseJSON[\"id\"])"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"userId\": {{userId}},\r\n  \"productId\": 2,\r\n  \"qnt\": 1,\r\n  \"cost\": 120\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{baseUrl}}/order/order",
+					"protocol": "http",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"order",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "деньги на счету пользователя",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5404e909-c002-4ee3-8a19-5f91fea3921e",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "5e944c07-b09e-4cc1-a26c-f723e49e77ac",
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var responseJSON = JSON.parse(responseBody)\r",
+							"\r",
+							"pm.test(\"Balance is 80$\", () => {\r",
+							"const responseJson = pm.response.json();\r",
+							"pm.expect(80).to.eql(responseJson.balance);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{baseUrl}}/bill/account/{{userId}}",
+					"protocol": "http",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"bill",
+						"account",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "отправленные сообщения",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "4ca654a8-f105-44b8-811b-9fd51093349e",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "781d0b34-beb9-4931-84bf-dedee059ff9e",
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var responseJSON = JSON.parse(responseBody)\r",
+							"\r",
+							"pm.test(\"Email sent\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    var mail = responseJson.find(function findByOrderId(element, index, array) {\r",
+							"    return element.body.indexOf(pm.collectionVariables.get(\"orderId\")) > -1;\r",
+							"    });\r",
+							"    \r",
+							"    pm.expect(pm.collectionVariables.get(\"userEmail\")).to.eql(mail.email);\r",
+							"    pm.expect(\"Заказ отменен\").to.eql(mail.title);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{baseUrl}}/mail/list",
+					"protocol": "http",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"mail",
+						"list"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "ee3d9cda-216f-4a90-89ab-af66820a7898",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "899ada18-9a08-4c86-a2f8-59b3cafe48cf",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "82c3f64d-156d-46f6-9a2f-fb68e2c4f1c5",
+			"key": "baseUrl",
+			"value": "arch.homework"
+		},
+		{
+			"id": "d430f769-02bd-417f-8e71-9f1c732417e4",
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"id": "438d36fb-3896-43fd-a0b7-9fa78de8f6ed",
+			"key": "userEmail",
+			"value": ""
+		},
+		{
+			"id": "51c6eb7b-673a-4ef6-9fa3-05c5a4d15a8b",
+			"key": "orderId",
+			"value": ""
+		}
+	],
+	"protocolProfileBehavior": {}
+}

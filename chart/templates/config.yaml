@@ -5,6 +5,7 @@ metadata:
 data:
   BASE_APP_URL: {{ .Values.appBasePath }}
   DATABASE_URL: {{ printf "jdbc:postgresql://%s:%s/%s" (include "postgresql.fullname" .) .Values.postgresql.service.port .Values.postgresql.postgresqlDatabase  | quote }}
+  BILL_URL: {{ .Values.billUrl }}
 ---
 apiVersion: v1
 kind: Secret
