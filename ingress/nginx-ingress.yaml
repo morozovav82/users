@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  generate-request-id: "false" #not working!!! why???
+metadata:
+  name: nginx-ingress-nginx-controller #{name-of-the-helm-chart}-ingress-nginx-controller
+---
+controller:
+  kind: DaemonSet
+  
+  reportNodeInternalIp: true
+
+  hostPort:
+    enabled: true
+    ports:
+      http: 80
+      https: 443
+
+  service:
+    type: NodePort
+
+  metrics:
+    enabled: false
+    serviceMonitor:
+      enabled: true
+      scrapeInterval: 5s

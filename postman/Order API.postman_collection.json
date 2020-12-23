@@ -162,7 +162,71 @@
 			],
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "X-Request-Id",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"userId\": {{userId}},\r\n  \"productId\": 1,\r\n  \"qnt\": 1,\r\n  \"cost\": 20\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{baseUrl}}/order/order",
+					"protocol": "http",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"order",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "дубль заказа",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "1672ae18-a5b0-4dc7-8489-e3cb9ed383a0",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "b77ca520-009c-44f9-97af-16c010cb08bb",
+						"exec": [
+							"pm.test(\"Status code is 204\", () => {\r",
+							"  pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Request-Id",
+						"value": "1",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "{\r\n  \"userId\": {{userId}},\r\n  \"productId\": 1,\r\n  \"qnt\": 1,\r\n  \"cost\": 20\r\n}",
@@ -478,22 +542,22 @@
 	],
 	"variable": [
 		{
-			"id": "82c3f64d-156d-46f6-9a2f-fb68e2c4f1c5",
+			"id": "30bd54c3-2398-4748-aacc-d64b8fae3a29",
 			"key": "baseUrl",
 			"value": "arch.homework"
 		},
 		{
-			"id": "d430f769-02bd-417f-8e71-9f1c732417e4",
+			"id": "9c4169b3-75b9-4dc6-8a4a-04b4c1611a81",
 			"key": "userId",
 			"value": ""
 		},
 		{
-			"id": "438d36fb-3896-43fd-a0b7-9fa78de8f6ed",
+			"id": "b122ead7-066d-4bbc-82a9-5bedbfa018ab",
 			"key": "userEmail",
 			"value": ""
 		},
 		{
-			"id": "51c6eb7b-673a-4ef6-9fa3-05c5a4d15a8b",
+			"id": "e8cb7f5e-f6ab-4310-a5da-136abbc0dadb",
 			"key": "orderId",
 			"value": ""
 		}
