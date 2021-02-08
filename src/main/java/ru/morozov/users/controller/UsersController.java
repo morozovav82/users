@@ -17,8 +17,8 @@ import ru.morozov.users.repo.UserRepository;
 
 import java.util.Optional;
 
-@RestController()
-@RequestMapping("/user")
+@RestController
+@RequestMapping
 @RequiredArgsConstructor
 @Slf4j
 public class UsersController {
@@ -28,7 +28,7 @@ public class UsersController {
     @Value("${bill.url}")
     private String billUrl;
 
-    @PostMapping("")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto createUser(@RequestBody NewUserDto user) {
         if (StringUtils.isEmpty(user.getUsername())) {
@@ -65,7 +65,7 @@ public class UsersController {
         return userDto;
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/{userId:\\d+}")
     public ResponseEntity getUser(@PathVariable("userId") Long userId) {
         Optional<User> res = userRepository.findById(userId);
         if (res.isPresent()) {
@@ -78,12 +78,12 @@ public class UsersController {
         }
     }
 
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/{userId:\\d+}")
     public void deleteUser(@PathVariable("userId") Long userId) {
         userRepository.deleteById(userId);
     }
 
-    @PutMapping("/{userId}")
+    @PutMapping("/{userId:\\d+}")
     public void updateUser(@PathVariable("userId") Long userId, @RequestBody NewUserDto user) {
         User userEntry = UserMapper.convertNewUserDtoToUser(user);
         userEntry.setId(userId);
