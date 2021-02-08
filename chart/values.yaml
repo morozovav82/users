@@ -14,6 +14,8 @@ postgresql:
   postgresqlDatabase: users
   postgresqlUsername: users
   postgresqlPassword: qwerty123
+  postgresqlMaxConnections: 500
+  postgresqlDbUserConnectionLimit: 500
   service:
     port: "5432"
 
