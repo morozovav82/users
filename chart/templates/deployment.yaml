@@ -32,11 +32,6 @@ spec:
                 configMapKeyRef:
                   name: users-config
                   key: BASE_APP_URL
-            - name: BILL_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: users-config
-                  key: BILL_URL
             - name: DB_URL
               valueFrom:
                 configMapKeyRef:
@@ -52,3 +47,23 @@ spec:
                 secretKeyRef:
                   name: users-secret
                   key: DATABASE_PSW
+            - name: MQ_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: users-config
+                  key: MQ_URL
+            - name: MQ_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: users-config
+                  key: MQ_PORT
+            - name: MQ_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: users-config
+                  key: MQ_USER
+            - name: MQ_PSW
+              valueFrom:
+                secretKeyRef:
+                  name: users-secret
+                  key: MQ_PSW

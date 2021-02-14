@@ -51,6 +51,9 @@ spec:
               --drop table if exists users;
               create table if not exists users (id serial not null, username varchar(100), firstName varchar(100), lastName varchar(100), email varchar(100), phone varchar(100));
               --insert into users (username, firstName, lastName) values ('ivanov_ii', 'Иван', 'Иванов');
+
+              --drop table if exists user_messages;
+              create table if not exists user_messages (id serial not null, sent timestamp, topic varchar(100), routing_key varchar(100), message text, class_name varchar(500));
             EOF
 
   backoffLimit: 0

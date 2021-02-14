@@ -5,7 +5,9 @@ metadata:
 data:
   BASE_APP_URL: {{ .Values.appBasePath }}
   DATABASE_URL: {{ printf "jdbc:postgresql://%s:%s/%s" (include "postgresql.fullname" .) .Values.postgresql.service.port .Values.postgresql.postgresqlDatabase  | quote }}
-  BILL_URL: {{ .Values.billUrl }}
+  MQ_URL: {{ .Values.mq.url }}
+  MQ_PORT: {{ .Values.mq.port | quote }}
+  MQ_USER: {{ .Values.mq.username }}
 ---
 apiVersion: v1
 kind: Secret
@@ -15,3 +17,4 @@ type: Opaque
 data:
   DATABASE_USER: {{ printf "%s" .Values.postgresql.postgresqlUsername  | b64enc | quote }}
   DATABASE_PSW: {{ printf "%s" .Values.postgresql.postgresqlPassword  | b64enc | quote }}
+  MQ_PSW: {{ printf "%s" .Values.mq.password  | b64enc | quote }}

@@ -2,20 +2,14 @@ package ru.morozov.users.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-import ru.morozov.users.UserMapper;
-import ru.morozov.users.dto.NewAccountDto;
 import ru.morozov.users.dto.NewUserDto;
 import ru.morozov.users.dto.UserDto;
-import ru.morozov.users.entity.User;
-import ru.morozov.users.repo.UserRepository;
-
-import java.util.Optional;
+import ru.morozov.users.exceptions.NotFoundException;
+import ru.morozov.users.service.UserService;
 
 @RestController
 @RequestMapping
@@ -23,10 +17,7 @@ import java.util.Optional;
 @Slf4j
 public class UsersController {
 
-    private final UserRepository userRepository;
-
-    @Value("${bill.url}")
-    private String billUrl;
+    private final UserService userService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -35,58 +26,41 @@ public class UsersController {
             throw new RuntimeException("Empty username");
         }
 
-        boolean exists = userRepository.existsByUsername(user.getUsername());
-        if (exists) {
-            throw new RuntimeException("User exists");
-        }
-
-        //create user
-        UserDto userDto = UserMapper.convertUserToUserDto(
-                userRepository.save(
-                        UserMapper.convertNewUserDtoToUser(user)
-                )
-        );
-
-        //create account
-        RestTemplate restTemplate = new RestTemplate();
-        try {
-            String url = billUrl + "/account";
-            log.debug("Sent request to " + url);
-            NewAccountDto accountDto = new NewAccountDto();
-            accountDto.setUserId(userDto.getId());
-            ResponseEntity<String> result = restTemplate.postForEntity(url, accountDto, String.class);
-            log.info("Account created. Result: {}", result.getBody());
-        } catch (Throwable e) {
-            log.error("Failed to create account for user " + user.getUsername(), e);
-            userRepository.deleteById(userDto.getId());
-            throw e;
-        }
-
-        return userDto;
+        return userService.create(user);
     }
 
     @GetMapping("/{userId:\\d+}")
     public ResponseEntity getUser(@PathVariable("userId") Long userId) {
-        Optional<User> res = userRepository.findById(userId);
-        if (res.isPresent()) {
+        try {
             return new ResponseEntity(
-                    UserMapper.convertUserToUserDto(res.get()),
+                    userService.get(userId),
                     HttpStatus.OK
             );
-        } else {
+        } catch (NotFoundException e) {
+            log.warn(e.getMessage());
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
 
     @DeleteMapping("/{userId:\\d+}")
-    public void deleteUser(@PathVariable("userId") Long userId) {
-        userRepository.deleteById(userId);
+    public ResponseEntity deleteUser(@PathVariable("userId") Long userId) {
+        try {
+            userService.delete(userId);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (NotFoundException e) {
+            log.warn(e.getMessage());
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PutMapping("/{userId:\\d+}")
-    public void updateUser(@PathVariable("userId") Long userId, @RequestBody NewUserDto user) {
-        User userEntry = UserMapper.convertNewUserDtoToUser(user);
-        userEntry.setId(userId);
-        userRepository.save(userEntry);
+    public ResponseEntity updateUser(@PathVariable("userId") Long userId, @RequestBody NewUserDto user) {
+        try {
+            userService.update(userId, user);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (NotFoundException e) {
+            log.warn(e.getMessage());
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
     }
 }
