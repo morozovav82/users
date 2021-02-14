@@ -66,6 +66,10 @@ Create the name of the service account to use
 Create the name of the postgresql.
 */}}
 {{- define "postgresql.fullname" -}}
-{{- printf "%s-%s" .Release.Name "postgresql" | trunc 63 | trimSuffix "-" -}}
+{{- if .Values.postgresql.enabled -}}
+    {{- printf "%s-%s" .Release.Name "postgresql" | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+    {{ .Values.postgresql.fullname }}
+{{- end -}}
 {{- end -}}
 

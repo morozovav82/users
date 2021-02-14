@@ -9,7 +9,8 @@ service:
 appBasePath: '/users'
 
 postgresql:
-  enabled: true
+  enabled: false
+  fullname: postgresql.morozovav.svc.cluster.local
   postgresqlDatabase: users
   postgresqlUsername: users
   postgresqlPassword: qwerty123
