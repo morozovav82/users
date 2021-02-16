@@ -25,16 +25,9 @@ public class UserMapper {
         user.setLastname(newUserDto.getLastname());
         user.setEmail(newUserDto.getEmail());
         user.setPhone(newUserDto.getPhone());
+        user.setPassword(newUserDto.getPassword());
 
         return user;
     }
-
-    public static User convertUserDtoToUser(UserDto userDto) {
-        User user = convertNewUserDtoToUser(userDto);
-        user.setId(userDto.getId());
-
-        return user;
-    }
-
 
 }

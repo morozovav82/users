@@ -70,4 +70,18 @@ public class UserService {
             throw new NotFoundException(id);
         }
     }
+
+    public Optional<User> findOneByUsernameAndPassword(String userName, String userPassword) {
+        return null;
+    }
+
+    public UserDto find(String userName, String userPassword) {
+        Optional<User> res = userRepository.findOneByUsernameAndPassword(userName, userPassword);
+        if (res.isPresent()) {
+            User user = res.get();
+            return UserMapper.convertUserToUserDto(user);
+        } else {
+            throw new NotFoundException(userName);
+        }
+    }
 }
