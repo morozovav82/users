@@ -12,7 +12,7 @@ authAuthUrl: 'http://auth-auth-chart.morozovav.svc.cluster.local:9010/auth'
 
 postgresql:
   enabled: false
-  fullname: postgresql.morozovav.svc.cluster.local
+  fullname: postgresql.morozovav.svc.cluster.local # set if postgresql.enabled=false
   postgresqlDatabase: users
   postgresqlUsername: users
   postgresqlPassword: qwerty123
@@ -36,7 +36,7 @@ ingress:
   hosts:
     - host: arch.homework
       paths: ["/users"]
-      
+
 metrics:
   serviceMonitor:
     enabled: false
