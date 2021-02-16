@@ -2,10 +2,14 @@ package ru.morozov.users.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+
+import java.io.Serializable;
 
 @Getter
 @Setter
-public abstract class BaseUserDto {
+@ToString
+public abstract class BaseUserDto implements Serializable {
     private String username;
     private String firstname;
     private String lastname;
