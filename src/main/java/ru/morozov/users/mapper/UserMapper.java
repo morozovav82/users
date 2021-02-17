@@ -1,8 +1,4 @@
-<<<<<<< HEAD:src/main/java/ru/morozov/users/utils/UserMapper.java
-package ru.morozov.users.utils;
-=======
 package ru.morozov.users.mapper;
->>>>>>> v1:src/main/java/ru/morozov/users/mapper/UserMapper.java
 
 import ru.morozov.users.dto.NewUserDto;
 import ru.morozov.users.dto.UserDto;
@@ -34,20 +30,4 @@ public class UserMapper {
         return user;
     }
 
-<<<<<<< HEAD:src/main/java/ru/morozov/users/utils/UserMapper.java
-    public static User convertUserDtoToUser(UserDto userDto) {
-        User user = new User();
-        user.setUsername(userDto.getUsername());
-        user.setFirstname(userDto.getFirstname());
-        user.setLastname(userDto.getLastname());
-        user.setEmail(userDto.getEmail());
-        user.setPhone(userDto.getPhone());
-        user.setId(userDto.getId());
-
-        return user;
-    }
-
-
-=======
->>>>>>> v1:src/main/java/ru/morozov/users/mapper/UserMapper.java
 }
