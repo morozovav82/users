@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.savedrequest.NullRequestCache;
+import org.springframework.security.web.util.matcher.AndRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import ru.morozov.users.security.AuthProvider;
@@ -34,6 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(headersAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/public/**").permitAll()
+                .antMatchers("/tests/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable();
@@ -59,7 +61,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private Filter headersAuthenticationFilter() throws Exception {
         final HeadersAuthenticationFilter filter = new HeadersAuthenticationFilter(
-                new NegatedRequestMatcher(new AntPathRequestMatcher("/public/**")));
+                new AndRequestMatcher(
+                        new NegatedRequestMatcher(new AntPathRequestMatcher("/public/**")),
+                        new NegatedRequestMatcher(new AntPathRequestMatcher("/tests/**"))
+                ));
         filter.setAuthenticationManager(authenticationManager());
         return filter;
     }
