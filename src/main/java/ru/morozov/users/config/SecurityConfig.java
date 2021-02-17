@@ -37,13 +37,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable();
+
+        sessionManagement(http);
+        cacheManagement(http);
     }
 
     protected final HttpSecurity sessionManagement(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .sessionManagement()
-                //Никогда не создавать сессию
-                .sessionCreationPolicy(SessionCreationPolicy.NEVER)
+                //Не создавать сессию
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and();
     }
 

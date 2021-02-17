@@ -1,60 +1,74 @@
 package ru.morozov.users.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import ru.morozov.users.utils.AuthUtils;
-import ru.morozov.users.utils.UserMapper;
 import ru.morozov.users.dto.NewUserDto;
-import ru.morozov.users.entity.User;
-import ru.morozov.users.repo.UserRepository;
-
-import java.util.Optional;
+import ru.morozov.users.dto.UserDto;
+import ru.morozov.users.exceptions.NotFoundException;
+import ru.morozov.users.service.UserService;
+import ru.morozov.users.utils.AuthUtils;
 
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
+@Slf4j
 public class UsersController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    @GetMapping("/{userId}")
+    @GetMapping("/me")
+    public UserDto getMe() {
+        return (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    @GetMapping("/{userId:\\d+}")
     public ResponseEntity getUser(@PathVariable("userId") Long userId) {
         if (!AuthUtils.getCurrentUserId().equals(userId)) {
             return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
 
-        Optional<User> res = userRepository.findById(userId);
-        if (res.isPresent()) {
+        try {
             return new ResponseEntity(
-                    UserMapper.convertUserToUserDto(res.get()),
+                    userService.get(userId),
                     HttpStatus.OK
             );
-        } else {
+        } catch (NotFoundException e) {
+            log.warn(e.getMessage());
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
 
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/{userId:\\d+}")
     public ResponseEntity deleteUser(@PathVariable("userId") Long userId) {
         if (!AuthUtils.getCurrentUserId().equals(userId)) {
             return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
 
-        userRepository.deleteById(userId);
-        return new ResponseEntity(HttpStatus.OK);
+        try {
+            userService.delete(userId);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (NotFoundException e) {
+            log.warn(e.getMessage());
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
     }
 
-    @PutMapping("/{userId}")
+    @PutMapping("/{userId:\\d+}")
     public ResponseEntity updateUser(@PathVariable("userId") Long userId, @RequestBody NewUserDto user) {
         if (!AuthUtils.getCurrentUserId().equals(userId)) {
             return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
 
-        User userEntry = UserMapper.convertNewUserDtoToUser(user);
-        userEntry.setId(userId);
-        userRepository.save(userEntry);
-        return new ResponseEntity(HttpStatus.OK);
+        try {
+            userService.update(userId, user);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (NotFoundException e) {
+            log.warn(e.getMessage());
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
     }
 }

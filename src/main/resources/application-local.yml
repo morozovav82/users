@@ -1,12 +1,21 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /users
+
 spring:
-  datasource:
-    driver-class-name: 'org.postgresql.Driver'
-    url: jdbc:postgresql://localhost:5432/postgres?currentShema=users
-    username: users
-    password: qwerty123
+    datasource:
+      driver-class-name: 'org.postgresql.Driver'
+      url: jdbc:postgresql://localhost:5432/postgres?currentShema=users
+      username: users
+      password: qwerty123
+    rabbitmq:
+      host: localhost
+      port: 5672
+      username: rabbit
+      password: rabbit
+    redis:
+      host: localhost
+      port: 6379
 
-app.basePath: /
-
-#logging:
-#  level:
-#    root: debug
+app.basePath: /users
