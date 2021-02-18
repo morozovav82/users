@@ -1,6 +1,6 @@
 replicaCount: 1
 
-image: morozovav82/users:1.6
+image: morozovav82/users:2.1
 
 service:
   type: NodePort
