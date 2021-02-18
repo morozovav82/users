@@ -14,7 +14,7 @@ public class UserProducer {
     @Autowired
     private MessageService messageService;
 
-    @Value("${active-mq.UserRegistered-exchange}")
+    @Value("${mq.UserRegistered-exchange}")
     private String userRegisteredExchange;
 
     public void sendUserRegisteredMessage(UserRegisteredMsg message){

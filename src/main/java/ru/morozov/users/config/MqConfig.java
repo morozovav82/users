@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MqConfig {
 
-    @Value("${active-mq.UserRegistered-exchange}")
+    @Value("${mq.UserRegistered-exchange}")
     private String userRegisteredExchange;
 
     @Bean

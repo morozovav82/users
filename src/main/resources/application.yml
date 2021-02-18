@@ -17,7 +17,7 @@ spring:
 
 app.basePath:
 
-active-mq:
+mq:
   UserRegistered-exchange: UserRegisteredExchange
 
 #настройка actuator
