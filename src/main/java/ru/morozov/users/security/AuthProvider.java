@@ -7,22 +7,18 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.stereotype.Service;
 import ru.morozov.users.dto.UserDto;
-import ru.morozov.users.entity.User;
-import ru.morozov.users.mapper.UserMapper;
 import ru.morozov.users.repo.RedisRepository;
-import ru.morozov.users.repo.UserRepository;
-
-import java.util.Collections;
-import java.util.Optional;
+import ru.morozov.users.service.UserService;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class AuthProvider implements AuthenticationProvider {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final RedisRepository redisRepository;
 
     @Override
@@ -40,13 +36,13 @@ public class AuthProvider implements AuthenticationProvider {
         } else {
             //get user from DB
             log.info("Get user from DB. UserId=" + userId);
-            Optional<User> user = userRepository.findById(userId);
-
-            if (user.isPresent()) {
-                cacheUser = UserMapper.convertUserToUserDto(user.get());
+            try {
+                cacheUser = userService.get(userId);
 
                 //save user in Cache
                 redisRepository.add(cacheKey, cacheUser);
+            } catch (Throwable e) {
+                log.warn("User not found: " + e.getMessage());
             }
         }
 
@@ -54,7 +50,7 @@ public class AuthProvider implements AuthenticationProvider {
             throw new AuthenticationCredentialsNotFoundException("User not found by ID=" + userId);
         }
 
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(cacheUser, null, Collections.emptyList());
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(cacheUser, null, AuthorityUtils.createAuthorityList(cacheUser.getRoles().toArray(new String[cacheUser.getRoles().size()])));
 
         return token;
     }

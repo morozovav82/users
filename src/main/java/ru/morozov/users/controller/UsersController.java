@@ -71,4 +71,15 @@ public class UsersController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
+
+    @PutMapping("/{userId:\\d+}/assignRole/{role}")
+    public ResponseEntity assignRole(@PathVariable("userId") Long userId, @PathVariable("role") String role) {
+        try {
+            userService.assignRole(userId, role);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (NotFoundException e) {
+            log.warn(e.getMessage());
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+    }
 }
