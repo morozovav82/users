@@ -37,6 +37,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/public/**").permitAll()
                 .antMatchers("/tests/**").permitAll()
+                .antMatchers("/actuator/**").permitAll()
+                .antMatchers("/swagger*/**").permitAll()
+                .antMatchers("/v2/api-docs").permitAll()
+                .antMatchers("/webjars/**").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/user/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/user/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PATCH, "/user/**").hasRole("ADMIN")
@@ -68,7 +72,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         final HeadersAuthenticationFilter filter = new HeadersAuthenticationFilter(
                 new AndRequestMatcher(
                         new NegatedRequestMatcher(new AntPathRequestMatcher("/public/**")),
-                        new NegatedRequestMatcher(new AntPathRequestMatcher("/tests/**"))
+                        new NegatedRequestMatcher(new AntPathRequestMatcher("/tests/**")),
+                        new NegatedRequestMatcher(new AntPathRequestMatcher("/actuator/**")),
+                        new NegatedRequestMatcher(new AntPathRequestMatcher("/swagger*/**")),
+                        new NegatedRequestMatcher(new AntPathRequestMatcher("/v2/api-docs")),
+                        new NegatedRequestMatcher(new AntPathRequestMatcher("/webjars/**"))
+
                 ));
         filter.setAuthenticationManager(authenticationManager());
         return filter;
